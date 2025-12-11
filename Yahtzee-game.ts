@@ -24,6 +24,8 @@ const diceColourNameOptions : string[] = ["purple", "blue", "green", "orange", "
 
 for (let btn of chooseScoreBtnOptions) btn.style.display = "none";
 
+rollDice.style.display = "none";
+
 
 function rollTheDice() { //implemented "DRY" when assigning values to the dice, moving it to a seperate function
   
@@ -330,6 +332,7 @@ function reset() {
     v += 1;
   }
   rollDice.textContent = "Roll";
+  rollDice.style.display = "block";
 }
 
 
