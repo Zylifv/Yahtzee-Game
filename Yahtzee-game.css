@@ -4,6 +4,7 @@
   --green: #758242;
   --white: #FFFFFF;
   --black: #2c2b30;
+  --dice-black: #333;
   --light-grey: #dee2e6;
   --gold: #ffc300;
   --bold-gold: #EBB02D;
@@ -268,26 +269,24 @@ h2 {
   margin: -16px 0px 0px 34px;
 }
 
-.dot {
-  margin: auto;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 3px;
-  background-color: #FFFFFF;
-  align-items: center;
+.bounce {
+  animation: roll 0.5s ease-in-out;
+  animation-fill-mode: forwards;
 }
 
-.dot-dark {
-  margin: auto;
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 3px;
-  background-color: #333;
-  align-items: center;
+@keyframes roll {
+  0%{
+      transform: rotate(0deg);
+    }
+ 50%{
+      transform: translateY(-50px) rotate(180deg);
+    }
+ 70%{
+      transform: translateY(25px) rotate(400deg);
+    }
+100%{
+      transform: translateY(0px) rotate(360deg);
+    }
 }
 
 .dot {
@@ -308,9 +307,10 @@ h2 {
   height: 10px;
   border-radius: 50%;
   margin: 2px;
-  background-color: #331e18;
+  background-color: var(--dice-black);
   align-items: center;
 }
+
 
 .purple-background {
   background-color: #C9A0DC;
