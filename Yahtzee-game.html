@@ -1,0 +1,68 @@
+<html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+      <link href="styles.css" rel="stylesheet">
+      <title>Yahtzee concept</title>
+    </head>
+<body>
+<h1>Yahtzee!</h1>
+  <section id="scores-box">
+    <div id="current-score-total">Current total score: 0</div>
+    <div id="current-score-needed">Score to beat: <b>220</b></div>
+    <div id="remaining-turns-left">Turns left: 13</div>
+  </section>
+  <section id="scores-boxes">
+    <div id="upper-section-boxes">
+      <h2>Upper Section Scores:</h2>
+        <div id="aces" class="any-category">Aces:</div>
+        <div id="twos" class="any-category">Twos:</div>
+        <div id="threes" class="any-category">Threes:</div>
+        <div id="fours" class="any-category">Fours:</div>
+        <div id="fives" class="any-category">Fives:</div>
+        <div id="sixes" class="any-category">Sixes:</div>
+    </div>
+    <div id="lower-section-boxes">
+      <h2>Lower Section Scores:</h2>
+        <div id="chance">Chance:</div>
+        <div id="three-of-a-kind">Three-of-a-kind:</div>
+        <div id="four-of-a-kind">Four-of-a-kind:</div>
+        <div id="full-house">Full-house:</div>
+        <div id="small-straight">Small-straight:</div>
+        <div id="large-straight">Large-straight:</div>
+        <div id="yahtzee">Yahtzee:</div>
+    </div>
+  </section>
+  <section id="current-round">
+    <div id="curr-round-counter">Remaining re-rolls: 3</div>
+      <div id="curr-hand-display">
+        <div id="dice1" class="player-dice"></div>
+        <div id="dice2" class="player-dice"></div>
+        <div id="dice3" class="player-dice"></div>
+        <div id="dice4" class="player-dice"></div>
+        <div id="dice5" class="player-dice"></div>
+      </div>
+    <button id="roll-dice">Roll</button>
+  </section>
+  <button id="start">Start</button>
+    <div id="choose-score-option">
+      <button id="yahtzee-score" class="score-option score-option-lower" value="50">Yahtzee</button>
+      <button id="large-straight-score" class="score-option score-option-lower" value="40">Large Straight</button>
+      <button id="small-straight-score" class="score-option score-option-lower" value="30">Small straight</button>
+      <button id="four-of-a-kind-score" class="score-option score-option-lower" value="">4 Of A Kind</button>
+      <button id="three-of-a-kind-score" class="score-option score-option-lower" value="">3 Of A Kind</button>
+      <button id="full-house-score" class="score-option score-option-lower" value="25">Full House</button>
+      <button id="chance-score" class="score-option score-option-lower" value="">Chance</button>
+  
+      <button id="aces-score" class="score-option score-option-upper" value="1">Aces</button>
+      <button id="twos-score" class="score-option score-option-upper" value="2">Twos</button>
+      <button id="threes-score" class="score-option score-option-upper" value="3">Threes</button>
+      <button id="fours-score" class="score-option score-option-upper" value="4">Fours</button>
+      <button id="fives-score" class="score-option score-option-upper" value="5">Fives</button>
+      <button id="sixes-score" class="score-option score-option-upper" value="6">Sixes</button>
+    </div>
+      <div id="sig">- By R McGregor</div>
+    <script src="script.js"></script>
+  </body>
+</html>
+
