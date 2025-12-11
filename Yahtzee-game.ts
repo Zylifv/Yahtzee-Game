@@ -9,12 +9,14 @@ const chooseScoreBtnOptions = document.querySelectorAll(".score-option");
 const scoreOptionUpper = document.querySelectorAll(".score-option-upper");
 const diceFaces = document.querySelectorAll(".dice");
 let currentScoreTotal = document.getElementById("current-score-total");
-let rerollCounter : number = 3;
+let rerollCounter : number = 2;
 let currentDice : number[] = [];
 let currentGameScore : number = 0;
 let scoreToBeat : number = 220;
 let remainTurns : number = 13;
-let selectedScoreValue = 0;
+let selectedScoreValue : number = 0;
+let bonusScore : number = 0;
+let bonusScoreCheck : boolean = false;
 let chance : boolean = true;
 const randDiceCol : string[] = ["#A9BCFF", "#9AFFFF", "#18FFB1", "#FFD493", "#FF9F8C", "#FFBDDA"];
 const diceColourNameOptions : string[] = ["purple", "blue", "green", "orange", "red", "pink", "ivory", "yellow"];
@@ -29,6 +31,7 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
      if (dice.style.disabled !== true)
      {
        dice.innerHTML = ""; //resets the dots in each die for each roll
+       dice.classList.remove("bounce");
        let i : number = 0;
        do {
          dice.classList.contains(`dice-face-${i}`) ? dice.classList.remove(`dice-face-${i}`) : i += 1; //stops dice from having more than one 'dice-face-n' and interfering with the CSS
@@ -48,8 +51,9 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
 
        dotCheck(dice);
        dice.style.disabled = false;
-
-       for (let index = 0; index < playerDice.length; index++) //animation for the dice to give an interactive feel; will only work on non-locked dice.
+       
+        //animation for the dice to give an interactive feel; will only work on non-locked dice.
+       for (let index = 0; index < playerDice.length; index++)
        {
           diceBounce(playerDice[index], index * 40)
        }
@@ -59,10 +63,10 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
 
 
 function diceBounce(die, delay) { //timeout for each dice animation to give a staggered effect
-  setTimeout(() => {
-      die.classList.add("bounce");
-  }, delay)
-}
+   setTimeout(() => {
+     die.classList.add("bounce");
+   }, delay)
+ }
 
 
 function randomRoll() {
@@ -89,7 +93,7 @@ function dotCheck(d : Node) { //assigns the correct class to the dots based on t
     }
   }
   else if (d.classList.contains("ivory-background"))
-  {
+  { 
     for (const el of children)
     {
       if (el.nodeName === "SPAN")
@@ -125,8 +129,8 @@ startBtn.addEventListener("click", () => {
      startBtn.disabled = true;
      rollDice.disabled = false;
      currentDice.length = 0;
-     remainingRollsCounter.textContent = "Remaining re-rolls: 3";
-     rerollCounter = 3;
+     remainingRollsCounter.textContent = "Remaining re-rolls: 2";
+     rerollCounter = 2;
      remainTurns -= 1;
      selectedScoreValue = 0;
      document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
@@ -144,7 +148,6 @@ rerollCounter === 0 ? rollDice.disabled = true : rollDice.disabled = false;
 
 
 rollDice.addEventListener("click", () => {
-  console.log(rerollCounter);
   rerollCounter < 1 ? startBtn.disabled = false : startBtn.disabled = true;
   rerollCounter == 1 ? rollDice.textContent = "Choose Score" : rollDice.textContent = "Roll";
   if (rerollCounter > 0)
@@ -158,13 +161,15 @@ rollDice.addEventListener("click", () => {
     playerDice.forEach((dice) => {
       if (dice.style.disabled !== true) currentDice.push(dice.value); //pushes remaining dice into array that player didnt choose
     });
-    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`;
+    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`
+    
     startBtn.disabled = false;
     checkScore();
   };
 });
 
-//improved visibility for players to see what dice have already been locked in, also allows the player to de-select a dice if they change their mind
+
+//improved visibility for players to see what dice have already been locked in
 playerDice.forEach((dice) => {
   dice.addEventListener("click", () => {
     if (!dice.style.disabled)
@@ -182,9 +187,8 @@ playerDice.forEach((dice) => {
       }
       dice.style["boxShadow"] = "";
       dice.style.disabled = false;
-    }
-    
-  })
+    }   
+  });
 });
 
 
@@ -199,15 +203,11 @@ function checkScore() {
   
   let check = currentDice.sort((a,b) => a - b);
   check = check.join("");
-  console.log(check);
   
   rollDice.disabled = true;
   startBtn.disabled = true;
 
   chance == false ? chance = true : chance = false;
-  console.log(`chance ${chance}`)
-  
-  playerDice.forEach((d) => {console.log(`dice class: ${d.className}`)});
   
   if (/(.)\1{4}/.test(check)) //Yahtzee check
   {
@@ -267,16 +267,31 @@ function checkScore() {
     return;
   }
   // works for each of the upper section scores, now to find a way to disable them once already selected
-    for (let op of document.querySelectorAll(".score-option-upper")) {
-      if (currentDice.includes(Number(op.value)) && !op.classList.contains("alreadyClicked")) {
+    for (let op of document.querySelectorAll(".score-option-upper"))
+    {
+      if (currentDice.includes(Number(op.value)) && !op.classList.contains("alreadyClicked"))
+      {
         op.style.display = "block";
         op.value = currentDice.filter((v) => v === Number(op.value)).reduce((a,b) => a + b, 0);
-    };
-  }
+      };
+    }
   chooseYourScore();
 }
 
-
+function bonusCheck(val : number) {
+  let bonusVal : number = 35;
+  if (bonusScore >= 63 && !bonusScoreCheck)
+  {
+    bonusScoreCheck = true;
+    document.getElementById("bonus").textContent += ` ${bonusVal}`;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+  
+}
 function chooseYourScore() {
   //if no options available, player skips banking points
   let count : number = 0;
@@ -292,7 +307,9 @@ function chooseYourScore() {
       if (!clicked) {
       clicked = true;
       btn.classList.add("alreadyClicked");
+      btn.classList.contains("score-option-upper") ? bonusScore += Number(btn.value) : "";
       currentGameScore += Number(btn.value);
+      bonusCheck(currentGameScore) == true ? currentGameScore += 35 : "";
       currentScoreTotal.textContent = `Current total score: ${currentGameScore}`;
       document.getElementById(trim(btn.id)).textContent = v(btn.id) + `${Number(btn.value)}`;
       startBtn.disabled = false;
