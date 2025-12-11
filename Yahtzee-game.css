@@ -112,10 +112,6 @@ h2 {
   border-right: 5px solid var(--light-grey);
 }
 
-#upper-section-boxes > #sixes {
-  border-bottom: 2px solid var(--green);
-}
-
 #upper-section-boxes > .any-category, #lower-section-boxes > div {
   border-top: 2px solid var(--green);
   height: 26px;
