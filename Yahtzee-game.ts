@@ -48,8 +48,20 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
 
        dotCheck(dice);
        dice.style.disabled = false;
+
+       for (let index = 0; index < playerDice.length; index++) //animation for the dice to give an interactive feel; will only work on non-locked dice.
+       {
+          diceBounce(playerDice[index], index * 40)
+       }
      }
   });
+}
+
+
+function diceBounce(die, delay) { //timeout for each dice animation to give a staggered effect
+  setTimeout(() => {
+      die.classList.add("bounce");
+  }, delay)
 }
 
 
