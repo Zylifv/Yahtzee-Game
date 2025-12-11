@@ -9,7 +9,7 @@ const chooseScoreBtnOptions = document.querySelectorAll(".score-option");
 const scoreOptionUpper = document.querySelectorAll(".score-option-upper");
 const diceFaces = document.querySelectorAll(".dice");
 let currentScoreTotal = document.getElementById("current-score-total");
-let rerollCounter : number = 3;
+let rerollCounter : number = 2;
 let currentDice : number[] = [];
 let currentGameScore : number = 0;
 let scoreToBeat : number = 220;
@@ -114,7 +114,7 @@ startBtn.addEventListener("click", () => {
      rollDice.disabled = false;
      currentDice.length = 0;
      remainingRollsCounter.textContent = "Remaining re-rolls: 3";
-     rerollCounter = 3;
+     rerollCounter = 2;
      remainTurns -= 1;
      selectedScoreValue = 0;
      document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
@@ -132,22 +132,25 @@ rerollCounter === 0 ? rollDice.disabled = true : rollDice.disabled = false;
 
 
 rollDice.addEventListener("click", () => {
-  rerollCounter === 1 ? startBtn.disabled = false : startBtn.disabled = true;
-  if (rerollCounter > 0)
+  console.log(rerollCounter);
+  rerollCounter < 1 ? startBtn.disabled = false : startBtn.disabled = true;
+  if (rerollCounter >= 1)
   {
     rerollCounter -= 1;
-    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`
+    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter + 1}`
     rollTheDice();
    }
-  else if (rerollCounter === 0) {
+  else if (rerollCounter === 0)
+  {
     playerDice.forEach((dice) => {
-      if (dice.style.disabled !== true) currentDice.push(dice.value); //pushes remaining dice into array that player didnt choose independently
+      if (dice.style.disabled !== true) currentDice.push(dice.value); //pushes remaining dice into array that player didnt choose
     });
+    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`
+    rollDice.textContent = "Choose a score";
     startBtn.disabled = false;
     checkScore();
   };
 });
-
 
 //improved visibility for players to see what dice have already been locked in, also allows the player to de-select a dice if they change their mind
 playerDice.forEach((dice) => {
@@ -297,6 +300,7 @@ function reset() {
     btn.value = v;
     v += 1;
   }
+  rollDice.textContent = "Roll";
 }
 
 
