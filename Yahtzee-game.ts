@@ -9,7 +9,7 @@ const chooseScoreBtnOptions = document.querySelectorAll(".score-option");
 const scoreOptionUpper = document.querySelectorAll(".score-option-upper");
 const diceFaces = document.querySelectorAll(".dice");
 let currentScoreTotal = document.getElementById("current-score-total");
-let rerollCounter : number = 2;
+let rerollCounter : number = 3;
 let currentDice : number[] = [];
 let currentGameScore : number = 0;
 let scoreToBeat : number = 220;
@@ -114,7 +114,7 @@ startBtn.addEventListener("click", () => {
      rollDice.disabled = false;
      currentDice.length = 0;
      remainingRollsCounter.textContent = "Remaining re-rolls: 3";
-     rerollCounter = 2;
+     rerollCounter = 3;
      remainTurns -= 1;
      selectedScoreValue = 0;
      document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
@@ -134,10 +134,11 @@ rerollCounter === 0 ? rollDice.disabled = true : rollDice.disabled = false;
 rollDice.addEventListener("click", () => {
   console.log(rerollCounter);
   rerollCounter < 1 ? startBtn.disabled = false : startBtn.disabled = true;
-  if (rerollCounter >= 1)
+  rerollCounter == 1 ? rollDice.textContent = "Choose Score" : rollDice.textContent = "Roll";
+  if (rerollCounter > 0)
   {
     rerollCounter -= 1;
-    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter + 1}`
+    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`
     rollTheDice();
    }
   else if (rerollCounter === 0)
@@ -145,8 +146,7 @@ rollDice.addEventListener("click", () => {
     playerDice.forEach((dice) => {
       if (dice.style.disabled !== true) currentDice.push(dice.value); //pushes remaining dice into array that player didnt choose
     });
-    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`
-    rollDice.textContent = "Choose a score";
+    remainingRollsCounter.textContent = `Remaining re-rolls: ${rerollCounter}`;
     startBtn.disabled = false;
     checkScore();
   };
