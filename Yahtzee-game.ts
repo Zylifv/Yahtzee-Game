@@ -20,6 +20,27 @@ let bonusScoreCheck : boolean = false;
 let chance : boolean = true;
 const randDiceCol : string[] = ["#A9BCFF", "#9AFFFF", "#18FFB1", "#FFD493", "#FF9F8C", "#FFBDDA"];
 const diceColourNameOptions : string[] = ["purple", "blue", "green", "orange", "red", "pink", "ivory", "yellow"];
+const scoreTypeCheck = [
+  {
+    regex: /(.)\1{4}/,
+    score: "yahtzee-score"
+  },{
+    regex: /12345|23456/,
+    score: "large-straight-score"
+  },{
+    regex: /1234|2345|3456/,
+    score: "small-straight-score"
+  },{
+    regex: /(.)\1{2}(.)\2|(.)\3(.)\4{2}/,
+    score: "full-house-score"
+  },{
+    regex: /(.)\1{3}/,
+    score: "four-of-a-kind-score"
+  },{
+    regex: /(.)\1{2}/,
+    score: "three-of-a-kind-score"
+  }
+];
 
 
 for (let btn of chooseScoreBtnOptions) btn.style.display = "none";
