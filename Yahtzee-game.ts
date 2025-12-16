@@ -17,6 +17,7 @@ let remainTurns : number = 13;
 let selectedScoreValue : number = 0;
 let bonusScore : number = 0;
 let bonusScoreCheck : boolean = false;
+let finalScoreFlag : boolean = false;
 let chance : boolean = true;
 const randDiceCol : string[] = ["#A9BCFF", "#9AFFFF", "#18FFB1", "#FFD493", "#FF9F8C", "#FFBDDA"];
 const diceColourNameOptions : string[] = ["purple", "blue", "green", "orange", "red", "pink", "ivory", "yellow"];
@@ -28,10 +29,10 @@ const scoreTypeCheck = [
     regex: /12345|23456/,
     score: "large-straight-score"
   },{
-    regex: /1234|2345|3456/,
+    regex: /(?:1+2+3+4+){1}|(?:2+3+4+5+){1}|(?:3+4+5+6+){1}/,
     score: "small-straight-score"
   },{
-    regex: /(.)\1{2}(.)\2|(.)\3(.)\4{2}/,
+    regex: /^(?=([1-5]).*\1)(?=.+(?!\1)([1-6]).*\2)(?:\1|\2){5}$/,
     score: "full-house-score"
   },{
     regex: /(.)\1{3}/,
@@ -43,7 +44,8 @@ const scoreTypeCheck = [
 ];
 
 
-for (let btn of chooseScoreBtnOptions) btn.style.display = "none";
+for (let btn of chooseScoreBtnOptions) {btn.style.display = "none"};
+
 
 rollDice.style.display = "none";
 
@@ -74,11 +76,11 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
 
        dotCheck(dice);
        dice.style.disabled = false;
-       
         //animation for the dice to give an interactive feel; will only work on non-locked dice.
        for (let index = 0; index < playerDice.length; index++)
        {
-          diceBounce(playerDice[index], index * 40)
+         let r = Math.floor(Math.random() * 100);
+         diceBounce(playerDice[index], index * r)
        }
      }
   });
@@ -145,9 +147,8 @@ startBtn.addEventListener("click", () => {
        for (let i = 0; i < diceColourNameOptions.length; i++) {
          dice.classList.contains(`${diceColourNameOptions[i]}-background`) ? dice.classList.remove(`${diceColourNameOptions[i]}-background`) : "";
        }
-       Math.random() < 0.3 ? dice.classList.add("ivory-background") : dice.classList.add(randomDiceColour());
+       Math.random() < 0.3 ? dice.classList.add("ivory-background") : dice.classList.add(randomDiceColour()); //Slightly higher chance of seeing ivory coloured dice
      });
-      
      rollTheDice();
      startBtn.disabled = true;
      rollDice.disabled = false;
@@ -158,12 +159,19 @@ startBtn.addEventListener("click", () => {
      selectedScoreValue = 0;
      document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
     }
-    else
+    else if (finalScoreFlag) //finalScoreFlag check before the remainTurns === 0 statement because of soft-locking
+      {
+        resetGame();
+      }
+    else if (remainTurns === 0)
       {
         currentGameScore <= scoreToBeat ? currentScoreTotal.textContent = `You got ${currentGameScore} points, you needed to beat ${scoreToBeat}... You lose...` : currentScoreTotal.textContent = `You got ${currentGameScore} points, You Win!`;
         document.getElementById("current-score-needed").textContent = "";
         document.getElementById("remaining-turns-left").textContent = "";
+        finalScoreFlag = true;
+        startBtn.textContent = "New Game?"
       }
+    
 });
 
 
@@ -171,6 +179,7 @@ rerollCounter === 0 ? rollDice.disabled = true : rollDice.disabled = false;
 
 
 rollDice.addEventListener("click", () => {
+  console.log(rerollCounter);
   rerollCounter < 1 ? startBtn.disabled = false : startBtn.disabled = true;
   rerollCounter == 1 ? rollDice.textContent = "Choose Score" : rollDice.textContent = "Roll";
   if (rerollCounter > 0)
@@ -210,7 +219,7 @@ playerDice.forEach((dice) => {
       }
       dice.style["boxShadow"] = "";
       dice.style.disabled = false;
-    }   
+    }
   });
 });
 
@@ -226,14 +235,18 @@ function checkScore() {
   
   let check = currentDice.sort((a,b) => a - b);
   check = check.join("");
+  console.log(check);
   
   rollDice.disabled = true;
   startBtn.disabled = true;
 
   chance == false ? chance = true : chance = false;
-
+  console.log(`chance ${chance}`)
   
-  for (let i = 0; i < scoreTypeCheck.length; i++)
+  playerDice.forEach((d) => {console.log(`dice class: ${d.className}`)});
+  
+
+  for (let i = 0; i < scoreTypeCheck.length; i++) //A much quicker, more elegant way to check each score that implements DRY coding
     {
        if (scoreTypeCheck[i].regex.test(check))
        {
@@ -308,6 +321,7 @@ function checkScore() {
   // works for each of the upper section scores, now to find a way to disable them once already selected
     for (let op of document.querySelectorAll(".score-option-upper"))
     {
+      console.log(op.value)
       if (currentDice.includes(Number(op.value)) && !op.classList.contains("alreadyClicked"))
       {
         op.style.display = "block";
@@ -334,7 +348,8 @@ function bonusCheck(val : number) {
 function chooseYourScore() {
   //if no options available, player skips banking points
   let count : number = 0;
-  for (let i = 0; i < chooseScoreBtnOptions.length; i++) {
+  for (let i = 0; i < chooseScoreBtnOptions.length; i++)
+  {
     if (chooseScoreBtnOptions[i].style.display === "block") count += 1;
   }
   count <= 0 ? startBtn.disabled = false : startBtn.disabled = true;
@@ -347,8 +362,11 @@ function chooseYourScore() {
       clicked = true;
       btn.classList.add("alreadyClicked");
       btn.classList.contains("score-option-upper") ? bonusScore += Number(btn.value) : "";
+      console.log(`bonusScore value: ${bonusScore}`);
+      console.log(btn.id);
+      console.log(Number(btn.value));
       currentGameScore += Number(btn.value);
-      bonusCheck(currentGameScore) == true ? currentGameScore += 35 : "";
+      bonusCheck(currentGameScore) === true ? currentGameScore += 35 : "";
       currentScoreTotal.textContent = `Current total score: ${currentGameScore}`;
       document.getElementById(trim(btn.id)).textContent = v(btn.id) + `${Number(btn.value)}`;
       startBtn.disabled = false;
@@ -361,7 +379,7 @@ function chooseYourScore() {
 }
 
 
-function reset() {
+function reset() { //Round reset
   let v : number = 1;
   chance = false;
   for (let btn of scoreOptionUpper) { //reassigns the correct initial val to each of the buttons (needs refining somehow...)
@@ -370,6 +388,32 @@ function reset() {
   }
   rollDice.textContent = "Roll";
   rollDice.style.display = "block";
+}
+
+
+function resetGame() { //Once the game is over the player can decide to go again
+  reset();
+  startBtn.textContent = "Start";
+  rerollCounter = 2;
+  currentDice = [];
+  currentGameScore = 0;
+  scoreToBeat = 220;
+  remainTurns = 13;
+  selectedScoreValue = 0;
+  bonusScore = 0;
+  bonusScoreCheck = false;
+  finalScoreFlag = false;
+  chance = true;
+  document.querySelectorAll(".any-category, .lower-section").forEach((div) => {
+    div.textContent = div.id.substring(0,1).toUpperCase() + div.id.substring(1) + ":";
+  });
+  document.querySelectorAll(".score-option").forEach((btn) => {
+    btn.classList.remove("alreadyClicked");
+  });
+  currentScoreTotal.textContent = "Current total score: 0";
+  document.getElementById("current-score-needed").textContent = `Score to beat: ${scoreToBeat}`;
+  document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
+  finalScoreFlag = false;
 }
 
 
