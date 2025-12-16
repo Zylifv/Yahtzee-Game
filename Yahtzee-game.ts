@@ -145,7 +145,7 @@ startBtn.addEventListener("click", () => {
        for (let i = 0; i < diceColourNameOptions.length; i++) {
          dice.classList.contains(`${diceColourNameOptions[i]}-background`) ? dice.classList.remove(`${diceColourNameOptions[i]}-background`) : "";
        }
-       dice.classList.add(randomDiceColour());
+       Math.random() < 0.3 ? dice.classList.add("ivory-background") : dice.classList.add(randomDiceColour());
      });
       
      rollTheDice();
