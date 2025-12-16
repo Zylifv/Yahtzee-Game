@@ -231,7 +231,22 @@ function checkScore() {
   startBtn.disabled = true;
 
   chance == false ? chance = true : chance = false;
+
   
+  for (let i = 0; i < scoreTypeCheck.length; i++)
+    {
+       if (scoreTypeCheck[i].regex.test(check))
+       {
+          if (!document.getElementById(scoreTypeCheck[i].score).classList.contains("alreadyClicked"))
+          {
+            document.getElementById(scoreTypeCheck[i].score).style.display = "block";
+            scoreTypeCheck[i].score == "four-of-a-kind-score" ? document.getElementById(scoreTypeCheck[i].score).value = currentDice.reduce((a,b) => a + b, 0)
+            : scoreTypeCheck[i].score == "three-of-a-kind-score" ? document.getElementById(scoreTypeCheck[i].score).value = currentDice.reduce((a,b) => a + b, 0) : "";
+          }
+       }
+    }
+
+  /*
   if (/(.)\1{4}/.test(check)) //Yahtzee check
   {
     if (!document.getElementById("yahtzee-score").classList.contains("alreadyClicked"))
@@ -276,7 +291,8 @@ function checkScore() {
       document.getElementById("three-of-a-kind-score").style.display = "block";
       document.getElementById("three-of-a-kind-score").value = currentDice.reduce((a,b) => a + b, 0);
     }
-  }  
+  }
+  */
   if (chance)
   {
     if (!document.getElementById("chance-score").classList.contains("alreadyClicked"))
