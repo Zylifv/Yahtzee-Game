@@ -19,6 +19,8 @@ let bonusScore : number = 0;
 let bonusScoreCheck : boolean = false;
 let finalScoreFlag : boolean = false;
 let chance : boolean = true;
+const oddOrEvenArray : number[] = [1,2,3,4,5,6];
+let oddOnly : boolean = false;
 const randDiceCol : string[] = ["#A9BCFF", "#9AFFFF", "#18FFB1", "#FFD493", "#FF9F8C", "#FFBDDA"];
 const diceColourNameOptions : string[] = ["purple", "blue", "green", "orange", "red", "pink", "ivory", "yellow"];
 const scoreTypeCheck = [
@@ -76,10 +78,11 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
 
        dotCheck(dice);
        dice.style.disabled = false;
+       
         //animation for the dice to give an interactive feel; will only work on non-locked dice.
        for (let index = 0; index < playerDice.length; index++)
        {
-         let r = Math.floor(Math.random() * 100);
+         let r = Math.floor(Math.random() * 150);
          diceBounce(playerDice[index], index * r)
        }
      }
@@ -96,6 +99,20 @@ function diceBounce(die, delay) { //timeout for each dice animation to give a st
 
 function randomRoll() {
   return Math.floor(Math.random() * 6 + 1);
+}
+
+
+function randomRollOddOrEven() { // Allows player to choose a turn where all dice will either return odd or even, depending on their choice (1 turn only)
+  if (oddOnly)
+    {
+      let r = [...oddOrEvenArray.filter((el) => el % 2 !== 0)];
+       return r[Math.floor(Math.random() * r.length)];
+    }
+  else if (!oddOnly)
+    {
+      let r = [...oddOrEvenArray.filter((el) => el % 2 == 0)];
+      return r[Math.floor(Math.random() * r.length)];
+    }
 }
 
 
@@ -147,8 +164,9 @@ startBtn.addEventListener("click", () => {
        for (let i = 0; i < diceColourNameOptions.length; i++) {
          dice.classList.contains(`${diceColourNameOptions[i]}-background`) ? dice.classList.remove(`${diceColourNameOptions[i]}-background`) : "";
        }
-       Math.random() < 0.3 ? dice.classList.add("ivory-background") : dice.classList.add(randomDiceColour()); //Slightly higher chance of seeing ivory coloured dice
+       Math.random() < 0.3 ? dice.classList.add("ivory-background") : dice.classList.add(randomDiceColour());
      });
+      
      rollTheDice();
      startBtn.disabled = true;
      rollDice.disabled = false;
@@ -159,7 +177,7 @@ startBtn.addEventListener("click", () => {
      selectedScoreValue = 0;
      document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
     }
-    else if (finalScoreFlag) //finalScoreFlag check before the remainTurns === 0 statement because of soft-locking
+    else if (finalScoreFlag)
       {
         resetGame();
       }
@@ -246,7 +264,7 @@ function checkScore() {
   playerDice.forEach((d) => {console.log(`dice class: ${d.className}`)});
   
 
-  for (let i = 0; i < scoreTypeCheck.length; i++) //A much quicker, more elegant way to check each score that implements DRY coding
+  for (let i = 0; i < scoreTypeCheck.length; i++)
     {
        if (scoreTypeCheck[i].regex.test(check))
        {
@@ -379,7 +397,7 @@ function chooseYourScore() {
 }
 
 
-function reset() { //Round reset
+function reset() {
   let v : number = 1;
   chance = false;
   for (let btn of scoreOptionUpper) { //reassigns the correct initial val to each of the buttons (needs refining somehow...)
@@ -391,7 +409,7 @@ function reset() { //Round reset
 }
 
 
-function resetGame() { //Once the game is over the player can decide to go again
+function resetGame() {
   reset();
   startBtn.textContent = "Start";
   rerollCounter = 2;
