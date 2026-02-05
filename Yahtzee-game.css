@@ -61,7 +61,7 @@ h2 {
   margin-top: 20px;
 }
 
-#roll-dice, #start, .score-option {
+#roll-dice, #start, .score-option, #oddNumsOnly, #evenNumsOnly {
   margin: auto;
   margin-top: 20px;
   display: flex;
@@ -72,6 +72,8 @@ h2 {
   border: 3px solid var(--grapefruit);
   background-color: var(--white);
   font-weight: bold;
+  border-radius: 5px;
+  font-size: 0.8em;
 }
 
 #choose-score-option {
