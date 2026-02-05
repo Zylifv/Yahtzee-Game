@@ -11,6 +11,8 @@ Have a way to track which options the player has already used when choosing how 
 Maybe have a score the player must try to beat? (Single player progeression system) - DONE
 Eventually add different ways the player can change outcomes with card effects, such as: > Adding an extra dice for one roll > Having dice only roll odd or even for one roll > Guaranteeing a dice rolls how you want (choose the number) > One less dice in a round gives currency? (Add option for currency like other games) > Betting on a certain score category awards a way to upgrade the score for that outcome? (Betting on a full-house, then rolling one upgrades its score by 0.1% etc.)
 
+I have now implemented a way for the user to click a one-time use button to change the rolls of a round of dice to be only even or odd numbers, giving the player more agency in how they approach the game. I will continue to add things like this later on.
+
 For a working example of the game (during its progress), please use the link below:
 
 https://codepen.io/BobbyArmac/full/LENLWRR
