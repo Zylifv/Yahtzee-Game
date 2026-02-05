@@ -21,6 +21,7 @@ let finalScoreFlag : boolean = false;
 let chance : boolean = true;
 const oddOrEvenArray : number[] = [1,2,3,4,5,6];
 let oddOnly : boolean = false;
+let evenOnly : boolean = false;
 const randDiceCol : string[] = ["#A9BCFF", "#9AFFFF", "#18FFB1", "#FFD493", "#FF9F8C", "#FFBDDA"];
 const diceColourNameOptions : string[] = ["purple", "blue", "green", "orange", "red", "pink", "ivory", "yellow"];
 const scoreTypeCheck = [
@@ -49,6 +50,17 @@ const scoreTypeCheck = [
 for (let btn of chooseScoreBtnOptions) {btn.style.display = "none"};
 
 
+document.getElementById("oddNumsOnly").addEventListener("click", () => {
+  document.getElementById("oddNumsOnly").style.display = "none";
+  oddOnly = true;
+});
+
+document.getElementById("evenNumsOnly").addEventListener("click", () => {
+  document.getElementById("evenNumsOnly").style.display = "none";
+  evenOnly = true;
+});
+
+
 rollDice.style.display = "none";
 
 
@@ -63,8 +75,15 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
        do {
          dice.classList.contains(`dice-face-${i}`) ? dice.classList.remove(`dice-face-${i}`) : i += 1; //stops dice from having more than one 'dice-face-n' and interfering with the CSS
         } while (i <= 6);
-  
-        dice.value = randomRoll(dice);
+        //oddOnly == true ? dice.value = randomRollOddOrEven(dice) : dice.value = randomRoll(dice);
+       if (oddOnly || evenOnly)
+       {
+         dice.value = randomRollOddOrEven(dice);
+       }
+       else
+       {
+         dice.value =  randomRoll(dice);
+       }
         dice.classList.add(`dice-face-${dice.value}`);
 
        let span = document.createElement("span");
@@ -103,14 +122,14 @@ function randomRoll() {
 
 
 function randomRollOddOrEven() { // Allows player to choose a turn where all dice will either return odd or even, depending on their choice (1 turn only)
-  if (oddOnly)
+  if (oddOnly && !evenOnly)
     {
       let r = [...oddOrEvenArray.filter((el) => el % 2 !== 0)];
        return r[Math.floor(Math.random() * r.length)];
     }
-  else if (!oddOnly)
+  else if (!oddOnly && evenOnly)
     {
-      let r = [...oddOrEvenArray.filter((el) => el % 2 == 0)];
+      let r = [...oddOrEvenArray.filter((el) => el % 2 === 0)];
       return r[Math.floor(Math.random() * r.length)];
     }
 }
@@ -276,54 +295,6 @@ function checkScore() {
           }
        }
     }
-
-  /*
-  if (/(.)\1{4}/.test(check)) //Yahtzee check
-  {
-    if (!document.getElementById("yahtzee-score").classList.contains("alreadyClicked"))
-    {
-      document.getElementById("yahtzee-score").style.display = "block";
-    }
-  }
-  if (/12345|23456/.test(check)) //large straight check
-  {
-    if (!document.getElementById("large-straight-score").classList.contains("alreadyClicked"))
-    {
-      document.getElementById("large-straight-score").style.display = "block";
-    }
-  }
-  if (/1234|2345|3456/.test(Array.from(new Set(check.split(""))).join("").toString())) //small straight check
-  {
-    if (!document.getElementById("small-straight-score").classList.contains("alreadyClicked"))
-    {
-      document.getElementById("small-straight-score").style.display = "block";
-    }
-  }
-  if (/(.)\1{2}(.)\2|(.)\3(.)\4{2}/.test(check) && check.substring(0,1) !== check.substring(check.length -1)) //full house check
-  {
-    if (!document.getElementById("full-house-score").classList.contains("alreadyClicked"))
-    {
-      document.getElementById("full-house-score").style.display = "block";
-    }
-  }
-  if (/(.)\1{3}/.test(check)) //four of a kind check
-  {
-    if (!document.getElementById("four-of-a-kind-score").classList.contains("alreadyClicked"))
-    {
-      document.getElementById("four-of-a-kind-score").style.display = "block";
-      document.getElementById("four-of-a-kind-score").value = currentDice.reduce((a,b) => a + b, 0);
-    }
-    
-  }
-  if (/(.)\1{2}/.test(check)) //three of a kind check
-  {
-    if (!document.getElementById("three-of-a-kind-score").classList.contains("alreadyClicked"))
-    {
-      document.getElementById("three-of-a-kind-score").style.display = "block";
-      document.getElementById("three-of-a-kind-score").value = currentDice.reduce((a,b) => a + b, 0);
-    }
-  }
-  */
   if (chance)
   {
     if (!document.getElementById("chance-score").classList.contains("alreadyClicked"))
@@ -406,6 +377,8 @@ function reset() {
   }
   rollDice.textContent = "Roll";
   rollDice.style.display = "block";
+  oddOnly = false;
+  evenOnly = false;
 }
 
 
@@ -432,6 +405,10 @@ function resetGame() {
   document.getElementById("current-score-needed").textContent = `Score to beat: ${scoreToBeat}`;
   document.getElementById("remaining-turns-left").textContent = `Turns left: ${remainTurns}`;
   finalScoreFlag = false;
+  oddOnly = false;
+  evenOnly = false;
+  document.getElementById("oddNumsOnly").style.display = "block";
+  document.getElementById("evenNumsOnly").style.display = "block";
 }
 
 
