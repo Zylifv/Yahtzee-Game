@@ -4,6 +4,8 @@ const diceDots = document.querySelectorAll(".dot");
 const remainingRollsCounter = document.getElementById("curr-round-counter");
 const startBtn = document.getElementById("start");
 const lockBtns = document.querySelectorAll(".dice-lock");
+const oddNumsOnlyBtn = document.getElementById("oddNumsOnly");
+const evenNumsOnlyBtn = document.getElementById("evenNumsOnly");
 const chooseScoreDisplay = document.getElementById("choose-score-option");
 const chooseScoreBtnOptions = document.querySelectorAll(".score-option");
 const scoreOptionUpper = document.querySelectorAll(".score-option-upper");
@@ -48,14 +50,16 @@ const scoreTypeCheck = [
 
 
 for (let btn of chooseScoreBtnOptions) {btn.style.display = "none"};
+oddNumsOnlyBtn.style.display = "none";
+evenNumsOnlyBtn.style.display = "none";
 
 
-document.getElementById("oddNumsOnly").addEventListener("click", () => {
+oddNumsOnlyBtn.addEventListener("click", () => {
   document.getElementById("oddNumsOnly").style.display = "none";
   oddOnly = true;
 });
 
-document.getElementById("evenNumsOnly").addEventListener("click", () => {
+evenNumsOnlyBtn.addEventListener("click", () => {
   document.getElementById("evenNumsOnly").style.display = "none";
   evenOnly = true;
 });
@@ -75,7 +79,6 @@ function rollTheDice() { //implemented "DRY" when assigning values to the dice, 
        do {
          dice.classList.contains(`dice-face-${i}`) ? dice.classList.remove(`dice-face-${i}`) : i += 1; //stops dice from having more than one 'dice-face-n' and interfering with the CSS
         } while (i <= 6);
-        //oddOnly == true ? dice.value = randomRollOddOrEven(dice) : dice.value = randomRoll(dice);
        if (oddOnly || evenOnly)
        {
          dice.value = randomRollOddOrEven(dice);
@@ -184,11 +187,17 @@ startBtn.addEventListener("click", () => {
          dice.classList.contains(`${diceColourNameOptions[i]}-background`) ? dice.classList.remove(`${diceColourNameOptions[i]}-background`) : "";
        }
        Math.random() < 0.3 ? dice.classList.add("ivory-background") : dice.classList.add(randomDiceColour());
+       if (remainTurns === 8) {
+         oddNumsOnlyBtn.style.display = "block";
+         evenNumsOnlyBtn.style.display = "block";
+       }
      });
       
      rollTheDice();
      startBtn.disabled = true;
      rollDice.disabled = false;
+     evenNumsOnlyBtn.disabled = false;
+     oddNumsOnlyBtn.disabled = false;
      currentDice.length = 0;
      remainingRollsCounter.textContent = "Remaining re-rolls: 2";
      rerollCounter = 2;
@@ -276,6 +285,8 @@ function checkScore() {
   
   rollDice.disabled = true;
   startBtn.disabled = true;
+  oddNumsOnlyBtn.disabled = true;
+  evenNumsOnlyBtn.disabled = true;
 
   chance == false ? chance = true : chance = false;
   console.log(`chance ${chance}`)
@@ -407,8 +418,6 @@ function resetGame() {
   finalScoreFlag = false;
   oddOnly = false;
   evenOnly = false;
-  document.getElementById("oddNumsOnly").style.display = "block";
-  document.getElementById("evenNumsOnly").style.display = "block";
 }
 
 
